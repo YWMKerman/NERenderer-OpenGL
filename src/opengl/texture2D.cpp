@@ -11,13 +11,29 @@ Texture2D::Texture2D(int width,
                      GLint internalFormat,
                      GLenum format,
                      GLenum type,
-                     const char *data):
-                     
-                     textureWidth(width),
-                     textureHeight(height) {
+                     const char *data) {
 
-    // Generate Texture
     glGenTextures(1, &textureID);
+    UpdateTexture(width, height, warp, filter, internalFormat, format, type, data);
+}
+
+Texture2D::~Texture2D() {
+    glDeleteTextures(1, &textureID);
+}
+
+void Texture2D::UpdateTexture(int width,
+                              int height,
+                              GLint warp,
+                              GLint filter,
+                              GLint internalFormat,
+                              GLenum format,
+                              GLenum type,
+                              const char *data) {
+                              
+    textureWidth = width;
+    textureHeight = height;
+
+    // Bind Texture
     glBindTexture(GL_TEXTURE_2D, textureID);
 
     // Configure Texture
@@ -31,10 +47,6 @@ Texture2D::Texture2D(int width,
 
     // Unbind Texture
     glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-Texture2D::~Texture2D() {
-    glDeleteTextures(1, &textureID);
 }
 
 int Texture2D::GetTextureWidth() const {

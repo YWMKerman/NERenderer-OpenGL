@@ -62,11 +62,11 @@ void Shader::CompileShader() {
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
     int success;
-    char infoLog[512];
+    char infoLog[2048];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(vertexShader, 2048, NULL, infoLog);
         cout << "[Error] Shader: Vertex shader compile failed.\n" << infoLog << endl;
         exit(-1);
     }
@@ -78,7 +78,7 @@ void Shader::CompileShader() {
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(fragmentShader, 2048, NULL, infoLog);
         cout << "[Error] Shader: Fragment shader compile failed.\n" << infoLog << endl;
         exit(-1);
     }
@@ -90,7 +90,7 @@ void Shader::CompileShader() {
     glLinkProgram(shaderProgramID);
     glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &success);
     if (!success) {
-        glGetProgramInfoLog(shaderProgramID, 512, NULL, infoLog);
+        glGetProgramInfoLog(shaderProgramID, 2048, NULL, infoLog);
         cout << "[Error] Shader: Link failed.\n" << infoLog << endl;
         exit(-1);
     }

@@ -13,7 +13,16 @@ class Texture1D {
                   GLenum format,
                   GLenum type,
                   const char *data);
+
         ~Texture1D();
+
+        void UpdateTexture(int width,
+                           GLint warp,
+                           GLint filter,
+                           GLint internalFormat,
+                           GLenum format,
+                           GLenum type,
+                           const char *data);
 
         int GetTextureWidth() const;
         unsigned int GetTextureID() const;

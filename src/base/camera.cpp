@@ -3,10 +3,14 @@
 #include "include/camera.hpp"
 
 #include "../math/include/vector3.hpp"
-
+#include "../math/include/utils.hpp"
 #include "../opengl/include/shader.hpp"
 
-Camera::Camera(Vector3 pos,
+#include <cmath>
+
+Camera::Camera(int width,
+               int height,
+               Vector3 pos,
                Vector3 look,
                Vector3 up,
                float fov,
@@ -18,6 +22,17 @@ Camera::Camera(Vector3 pos,
 
     Vector3 right = Vector3::Cross(look, up);
     Vector3 newUp = Vector3::Cross(right, look);
+
+    float aspect = (float) width / height;
+    Vector3 origin = pos + look * focalLength;
+    float screenPlaneWidth = 2 * tan(TORADIAN(fov / 2)) * focalLength;
+    float screenPlaneHeight = screenPlaneWidth / aspect;
+    Vector3 screenUpperLeftCorner = origin
+                                    - right * screenPlaneWidth / 2
+                                    + newUp * screenPlaneHeight / 2;
+
+    cameraData.width = width;
+    cameraData.height = height;
 
     cameraData.pos[0] = pos[0];
     cameraData.pos[1] = pos[1];
@@ -35,6 +50,13 @@ Camera::Camera(Vector3 pos,
     cameraData.right[1] = right[1];
     cameraData.right[2] = right[2];
 
+    cameraData.screenUpperLeftCorner[0] = screenUpperLeftCorner[0];
+    cameraData.screenUpperLeftCorner[1] = screenUpperLeftCorner[1];
+    cameraData.screenUpperLeftCorner[2] = screenUpperLeftCorner[2];
+
+    cameraData.screenPlaneWidth = screenPlaneWidth;
+    cameraData.screenPlaneHeight = screenPlaneHeight;
+
     cameraData.fov = fov;
     cameraData.focalLength = focalLength;
     cameraData.lenRadius = lenRadius;
@@ -44,11 +66,29 @@ CameraData Camera::GetCameraData() const {
     return cameraData;
 }
 
+int Camera::GetScreenWidth() const {
+    return cameraData.width;
+}
+
+int Camera::GetScreenHeight() const {
+    return cameraData.height;
+}
+
 void Camera::SetCameraUniform(Shader *shader) const {
+    shader->SetUniform("camera.width", cameraData.width);
+    shader->SetUniform("camera.height", cameraData.height);
+
     shader->SetUniform("camera.pos", (float *) &cameraData.pos, 3);
+
     shader->SetUniform("camera.look", (float *) &cameraData.look, 3);
-    shader->SetUniform("camera.pos", (float *) &cameraData.up, 3);
+    shader->SetUniform("camera.up", (float *) &cameraData.up, 3);
     shader->SetUniform("camera.right", (float *) &cameraData.right, 3);
+
+    shader->SetUniform("camera.screenUpperLeftCorner", (float *) &cameraData.screenUpperLeftCorner, 3);
+
+    shader->SetUniform("camera.screenPlaneWidth", cameraData.screenPlaneWidth);
+    shader->SetUniform("camera.screenPlaneHeight", cameraData.screenPlaneHeight);
+
     shader->SetUniform("camera.fov", cameraData.fov);
     shader->SetUniform("camera.focalLength", cameraData.focalLength);
     shader->SetUniform("camera.lenRadius", cameraData.lenRadius);

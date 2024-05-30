@@ -14,7 +14,17 @@ class Texture2D {
                   GLenum format,
                   GLenum type,
                   const char *data);
+
         ~Texture2D();
+
+        void UpdateTexture(int width,
+                           int height,
+                           GLint warp,
+                           GLint filter,
+                           GLint internalFormat,
+                           GLenum format,
+                           GLenum type,
+                           const char *data);
 
         int GetTextureWidth() const;
         int GetTextureHeight() const;

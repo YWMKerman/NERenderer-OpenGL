@@ -12,7 +12,9 @@
 #include "../renderer/include/renderer.hpp"
 
 int main() {
-    Camera camera(Vector3(0.0, -5.0,  0.0), // pos
+    Camera camera(800,                      // width
+                  600,                      // height
+                  Vector3(0.0, -5.0,  0.0), // pos
                   Vector3(0.0,  1.0,  0.0), // look
                   Vector3(0.0,  0.0,  1.0), // up
                   60,                       // fov
@@ -71,5 +73,5 @@ int main() {
     );
 
     Renderer renderer(scene, camera);
-    renderer.Render(800, 600);
+    renderer.Render();
 }

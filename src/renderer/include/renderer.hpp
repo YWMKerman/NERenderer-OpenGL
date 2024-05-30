@@ -9,12 +9,16 @@
 class Renderer {
     public:
         Renderer(Scene &scene, const Camera &camera);
-        void Render(int width, int height);
+        ~Renderer();
+
+        void Render();
 
     private:
         ObjectData *objectListData;
         unsigned int objectListDataLength;
+        unsigned int packPerObject;
         const Camera &camera;
         static const float vertices[];
         static const unsigned int faces[];
+        unsigned int *randomSeed;
 };

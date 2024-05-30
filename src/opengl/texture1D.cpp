@@ -10,12 +10,27 @@ Texture1D::Texture1D(int width,
                      GLint internalFormat,
                      GLenum format,
                      GLenum type,
-                     const char *data):
+                     const char *data) {
 
-                     textureWidth(width) {
-
-    // Generate Texture
     glGenTextures(1, &textureID);
+    UpdateTexture(width, warp, filter, internalFormat, format, type, data);
+}
+
+Texture1D::~Texture1D() {
+    glDeleteTextures(1, &textureID);
+}
+
+void Texture1D::UpdateTexture(int width,
+                              GLint warp,
+                              GLint filter,
+                              GLint internalFormat,
+                              GLenum format,
+                              GLenum type,
+                              const char *data) {
+
+    textureWidth = width;
+
+    // Bind Texture
     glBindTexture(GL_TEXTURE_1D, textureID);
 
     // Configure Texture
@@ -29,10 +44,6 @@ Texture1D::Texture1D(int width,
 
     // Unbind Texture
     glBindTexture(GL_TEXTURE_1D, 0);
-}
-
-Texture1D::~Texture1D() {
-    glDeleteTextures(1, &textureID);
 }
 
 int Texture1D::GetTextureWidth() const {

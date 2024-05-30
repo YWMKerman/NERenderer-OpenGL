@@ -15,6 +15,8 @@
 #include "../../third-party/glad/include/glad/glad.h"
 #include <GLFW/glfw3.h>
 
+#include <random>
+
 #define ArrayLength(_array) ((unsigned int) (sizeof(_array) / sizeof(*_array)))
 
 #define PROJECT_ROOT "/data/data/com.termux/files/home/workspace/NERenderer-OpenGL/"
@@ -39,9 +41,17 @@ const unsigned int Renderer::faces[] = {
 Renderer::Renderer(Scene &scene, const Camera &camera):
     camera(camera) {
     objectListData = scene.GetObjectList(&objectListDataLength);
+    packPerObject = sizeof(ObjectData) / (4 * sizeof(float));
+    randomSeed = NULL;
 }
 
-void Renderer::Render(int width, int height) {
+Renderer::~Renderer() {
+    delete [] randomSeed;
+}
+
+void Renderer::Render() {
+    int width = camera.GetScreenWidth();
+    int height = camera.GetScreenHeight();
     OpenGLWindow openglwindow(width, height, true, "NERenderer");
     openglwindow.LoadOpenGLFunctions();
 
@@ -53,13 +63,13 @@ void Renderer::Render(int width, int height) {
               (unsigned int *) faces,
               ArrayLength(faces));
 
-    Texture1D objectList(objectListDataLength * sizeof(ObjectData) / (4 * sizeof(float)),
-                         GL_CLAMP_TO_EDGE,
-                         GL_NEAREST,
-                         GL_RGBA32F,
-                         GL_RGBA,
-                         GL_FLOAT,
-                         (char *) objectListData);
+    Texture1D objectListTexture(objectListDataLength * packPerObject,
+                                GL_CLAMP_TO_EDGE,
+                                GL_NEAREST,
+                                GL_RGBA32F,
+                                GL_RGBA,
+                                GL_FLOAT,
+                                (char *) objectListData);
 
     FrameBuffer frame;
 
@@ -67,12 +77,27 @@ void Renderer::Render(int width, int height) {
                            height,
                            GL_CLAMP_TO_EDGE,
                            GL_NEAREST,
-                           GL_RGB32F,
-                           GL_RGB,
+                           GL_RGBA32F,
+                           GL_RGBA,
                            GL_FLOAT,
                            NULL);
 
     frame.BindTexture(frameTexture.GetTextureID());
+
+    default_random_engine engine(time(0));
+    randomSeed = new unsigned int[width * height];
+    for (int i = 0; i < width * height; i++) {
+        randomSeed[i] = engine();
+    }
+
+    Texture2D randomSeedTexture(width,
+                                height,
+                                GL_CLAMP_TO_EDGE,
+                                GL_NEAREST,
+                                GL_R32F,
+                                GL_RED,
+                                GL_UNSIGNED_INT,
+                                (char *) randomSeed);
 
     openglwindow.RenderLoop(
         [&] (GLFWwindow *window) {
@@ -96,12 +121,33 @@ void Renderer::Render(int width, int height) {
 
             // Activate Object List Texture
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_1D, objectList.GetTextureID());
+            glBindTexture(GL_TEXTURE_1D, objectListTexture.GetTextureID());
+
+            // Update Random Seed Texture
+            for (int i = 0; i < width * height; i++) {
+                randomSeed[i] = engine();
+            }
+
+            randomSeedTexture.UpdateTexture(width,
+                                            height,
+                                            GL_CLAMP_TO_EDGE,
+                                            GL_NEAREST,
+                                            GL_R32F,
+                                            GL_RED,
+                                            GL_UNSIGNED_INT,
+                                            (char *) randomSeed);
+
+            // Activate Random Seed Texture
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, randomSeedTexture.GetTextureID());
 
             // Initialize Uniform Variables
             // renderShader.SetUniform("lastRenderResult", (int) 0);
             camera.SetCameraUniform(&renderShader);
+            renderShader.SetUniform("objectNum", objectListDataLength);
+            renderShader.SetUniform("packPerObject", packPerObject);
             renderShader.SetUniform("objectList", 1);
+            renderShader.SetUniform("randomSeed", 2);
             renderShader.SetUniform("screenGeometry",
                                     (unsigned int) width,
                                     (unsigned int) height);

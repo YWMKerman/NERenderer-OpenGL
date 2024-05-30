@@ -13,18 +13,18 @@ class Spectrum {
         bool IsInf();
         bool IsNaN();
 
-        Spectrum operator+(Spectrum &s);
-        Spectrum operator-(Spectrum &s);
-        Spectrum operator*(Spectrum &s);
+        Spectrum operator+(Spectrum s);
+        Spectrum operator-(Spectrum s);
+        Spectrum operator*(Spectrum s);
         Spectrum operator*(float n);
-        Spectrum operator/(Spectrum &s);
+        Spectrum operator/(Spectrum s);
         Spectrum operator/(float n);
         float    operator[](unsigned int i);
 
-        Spectrum & operator+=(Spectrum &s);
-        Spectrum & operator-=(Spectrum &s);
-        Spectrum & operator*=(Spectrum &s);
+        Spectrum & operator+=(Spectrum s);
+        Spectrum & operator-=(Spectrum s);
+        Spectrum & operator*=(Spectrum s);
         Spectrum & operator*=(float n);
-        Spectrum & operator/=(Spectrum &s);
+        Spectrum & operator/=(Spectrum s);
         Spectrum & operator/=(float n);
 };

@@ -27,15 +27,15 @@ bool Spectrum::IsNaN() {
     return isnan(r) || isnan(g) || isnan(b);
 }
 
-Spectrum Spectrum::operator+(Spectrum &s) {
+Spectrum Spectrum::operator+(Spectrum s) {
     return Spectrum(r + s.r, g + s.g, b + s.b);
 }
 
-Spectrum Spectrum::operator-(Spectrum &s) {
+Spectrum Spectrum::operator-(Spectrum s) {
     return Spectrum(r - s.r, g - s.g, b - s.b);
 }
 
-Spectrum Spectrum::operator*(Spectrum &s) {
+Spectrum Spectrum::operator*(Spectrum s) {
     return Spectrum(r * s.r, g * s.g, b * s.b);
 }
 
@@ -43,7 +43,7 @@ Spectrum Spectrum::operator*(float n) {
     return Spectrum(r * n, g * n, b * n);
 }
 
-Spectrum Spectrum::operator/(Spectrum &s) {
+Spectrum Spectrum::operator/(Spectrum s) {
     return Spectrum(r / s.r, g / s.g, b / s.b);
 }
 
@@ -62,21 +62,21 @@ float Spectrum::operator[](unsigned int i) {
     }
 }
 
-Spectrum & Spectrum::operator+=(Spectrum &s) {
+Spectrum & Spectrum::operator+=(Spectrum s) {
     r += s.r;
     g += s.g;
     b += s.b;
     return *this;
 }
 
-Spectrum & Spectrum::operator-=(Spectrum &s) {
+Spectrum & Spectrum::operator-=(Spectrum s) {
     r -= s.r;
     g -= s.g;
     b -= s.b;
     return *this;
 }
 
-Spectrum & Spectrum::operator*=(Spectrum &s) {
+Spectrum & Spectrum::operator*=(Spectrum s) {
     r *= s.r;
     g *= s.g;
     b *= s.b;
@@ -90,7 +90,7 @@ Spectrum & Spectrum::operator*=(float n) {
     return *this;
 }
 
-Spectrum & Spectrum::operator/=(Spectrum &s) {
+Spectrum & Spectrum::operator/=(Spectrum s) {
     r /= s.r;
     g /= s.g;
     b /= s.b;
