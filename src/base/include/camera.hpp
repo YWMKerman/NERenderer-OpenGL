@@ -4,6 +4,8 @@
 
 #include "../../math/include/vector3.hpp"
 
+#include "../../opengl/include/shader.hpp"
+
 typedef struct CameraData {
     float pos[3];
 
@@ -26,6 +28,7 @@ class Camera {
                float lenRadius); 
 
         CameraData GetCameraData() const;
+        void SetCameraUniform(Shader *shader) const;
 
     private:
         CameraData cameraData;

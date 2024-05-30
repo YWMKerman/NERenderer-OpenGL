@@ -1,2 +1,3 @@
 **/*.o
 build
+src/shader/render.glsl

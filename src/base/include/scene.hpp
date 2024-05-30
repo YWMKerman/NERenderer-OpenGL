@@ -13,8 +13,8 @@ class Scene {
         Scene();
         ~Scene();
 
-        Scene & AddObject(Object object);
-        ObjectData * GetObjectList() const;
+        Scene & AddObject(const Object &object);
+        ObjectData * GetObjectList(unsigned int *length) const;
 
     private:
         vector<ObjectData> *objectList;

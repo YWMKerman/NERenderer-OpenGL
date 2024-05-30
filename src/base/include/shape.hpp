@@ -8,17 +8,15 @@
 
 typedef struct ShapeData {
     // Pack 1
-    int type;
-    float radius; // For Sphere
-    int reverseNormal;
-
-    // Pack 2
+    float type;
     float p0[3]; // For Sphere Position
 
-    // Pack 3
+    // Pack 2
+    float radius; // For Sphere
     float p1[3];
 
-    // Pack 4
+    // Pack 3
+    float reverseNormal;
     float p2[3];
 } ShapeData;
 

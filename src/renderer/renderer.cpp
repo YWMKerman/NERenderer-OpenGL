@@ -9,7 +9,8 @@
 #include "../opengl/include/shader.hpp"
 #include "../opengl/include/mesh.hpp"
 #include "../opengl/include/framebuffer.hpp"
-#include "../opengl/include/texture.hpp"
+#include "../opengl/include/texture1D.hpp"
+#include "../opengl/include/texture2D.hpp"
 
 #include "../../third-party/glad/include/glad/glad.h"
 #include <GLFW/glfw3.h>
@@ -17,9 +18,9 @@
 #define ArrayLength(_array) ((unsigned int) (sizeof(_array) / sizeof(*_array)))
 
 #define PROJECT_ROOT "/data/data/com.termux/files/home/workspace/NERenderer-OpenGL/"
-#define VERTEX_SHADER_PATH PROJECT_ROOT "src/opengl/shader/vertex.glsl"
-#define RENDER_FRAGMENT_SHADER_PATH PROJECT_ROOT "src/opengl/shader/render.glsl"
-#define DISPLAY_FRAGMENT_SHADER_PATH PROJECT_ROOT "src/opengl/shader/display.glsl"
+#define VERTEX_SHADER_PATH PROJECT_ROOT "src/shader/vertex.glsl"
+#define RENDER_FRAGMENT_SHADER_PATH PROJECT_ROOT "src/shader/render.glsl"
+#define DISPLAY_FRAGMENT_SHADER_PATH PROJECT_ROOT "src/shader/display.glsl"
 
 using namespace std;
 
@@ -35,9 +36,9 @@ const unsigned int Renderer::faces[] = {
     1, 2, 3  // Second Triangle
 };
 
-Renderer::Renderer(Scene &scene, const Camera &camera) {
-    cameraData = camera.GetCameraData();
-    objectListData = (unsigned char *) scene.GetObjectList();
+Renderer::Renderer(Scene &scene, const Camera &camera):
+    camera(camera) {
+    objectListData = scene.GetObjectList(&objectListDataLength);
 }
 
 void Renderer::Render(int width, int height) {
@@ -52,16 +53,24 @@ void Renderer::Render(int width, int height) {
               (unsigned int *) faces,
               ArrayLength(faces));
 
-    FrameBuffer frame;
-
-    Texture frameTexture(width,
-                         height,
+    Texture1D objectList(objectListDataLength * sizeof(ObjectData) / (4 * sizeof(float)),
                          GL_CLAMP_TO_EDGE,
                          GL_NEAREST,
-                         GL_RGB32F,
-                         GL_RGB,
+                         GL_RGBA32F,
+                         GL_RGBA,
                          GL_FLOAT,
-                         NULL);
+                         (char *) objectListData);
+
+    FrameBuffer frame;
+
+    Texture2D frameTexture(width,
+                           height,
+                           GL_CLAMP_TO_EDGE,
+                           GL_NEAREST,
+                           GL_RGB32F,
+                           GL_RGB,
+                           GL_FLOAT,
+                           NULL);
 
     frame.BindTexture(frameTexture.GetTextureID());
 
@@ -85,8 +94,14 @@ void Renderer::Render(int width, int height) {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, frameTexture.GetTextureID());
 
+            // Activate Object List Texture
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_1D, objectList.GetTextureID());
+
             // Initialize Uniform Variables
-            // renderShader.SetUniform("lastRenderResult", static_cast<int>(0));
+            // renderShader.SetUniform("lastRenderResult", (int) 0);
+            camera.SetCameraUniform(&renderShader);
+            renderShader.SetUniform("objectList", 1);
             renderShader.SetUniform("screenGeometry",
                                     (unsigned int) width,
                                     (unsigned int) height);
@@ -114,7 +129,7 @@ void Renderer::Render(int width, int height) {
             glBindTexture(GL_TEXTURE_2D, frameTexture.GetTextureID());
 
             // Initialize Uniform Variables
-            displayShader.SetUniform("lastRenderResult", static_cast<int>(0));
+            displayShader.SetUniform("lastRenderResult", (int) 0);
             displayShader.SetUniform("screenGeometry",
                                     (unsigned int) width,
                                     (unsigned int) height);

@@ -4,6 +4,7 @@
 
 #include "../../base/include/camera.hpp"
 #include "../../base/include/scene.hpp"
+#include "../../base/include/object.hpp"
 
 class Renderer {
     public:
@@ -11,8 +12,9 @@ class Renderer {
         void Render(int width, int height);
 
     private:
-        unsigned char *objectListData;
-        CameraData cameraData;
+        ObjectData *objectListData;
+        unsigned int objectListDataLength;
+        const Camera &camera;
         static const float vertices[];
         static const unsigned int faces[];
 };

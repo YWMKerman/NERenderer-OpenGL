@@ -1,9 +1,4 @@
-#version 330 core
-
-out vec4 outColor;
-
-uniform sampler2D lastRenderResult;
-uniform uvec2 screenGeometry;
+// main.glsl
 
 void main() {
     outColor = vec4(1.0f * gl_FragCoord.x / screenGeometry.x,

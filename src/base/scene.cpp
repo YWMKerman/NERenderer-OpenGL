@@ -16,11 +16,12 @@ Scene::~Scene() {
     delete objectList;
 }
 
-Scene & Scene::AddObject(Object object) {
+Scene & Scene::AddObject(const Object &object) {
     objectList->push_back(object.GetObjectData());
     return *this;
 }
 
-ObjectData * Scene::GetObjectList() const {
+ObjectData * Scene::GetObjectList(unsigned int *length) const {
+    *length = (unsigned int) objectList->size();
     return objectList->data();
 }

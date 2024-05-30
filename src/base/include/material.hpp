@@ -8,11 +8,11 @@
 
 typedef struct MaterialData {
     // Pack 1
-    int type;
+    float type;
     float kd[3];
 
     // Pack 2
-    int isGlow;
+    float isGlow;
     float glowSpectrum[3];
 } MaterialData;
 
