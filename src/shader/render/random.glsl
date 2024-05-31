@@ -8,19 +8,34 @@ const uint LCG_M = uint(2147483647);
 
 uint seed;
 
-void randomInit(vec2 screenOffset) {
-    seed = uint(texture2D(randomSeed, screenOffset).x);
+void RandomInit(vec2 screenIndex) {
+    seed = uint(texture2D(randomSeed, screenIndex / screenGeometry).x);
 }
 
-uint randomUint() {
+uint RandomUint() {
     seed = (seed * LCG_A + LCG_C) % LCG_M;
     return seed;
 }
 
-float random01() {
-    return float(randomUint() - uint(1)) / float(LCG_M - uint(1));
+float Random01() {
+    return float(RandomUint() - uint(1)) / float(LCG_M - uint(1));
 }
 
-float random11() {
-    return random01() * 2.0f - 1.0f;
+float Random11() {
+    return Random01() * 2.0f - 1.0f;
+}
+
+vec3 RandomSphereDir() {
+    float z = Random11();
+    float r = sqrt(1.0f - z * z);
+    float phi = Random01() * TWOPI;
+    return vec3(r * cos(phi), r * sin(phi), z);
+}
+
+vec3 RandomHemisphereDir(vec3 normal) {
+    vec3 randDir = RandomSphereDir();
+    if (dot(normal, randDir) < 0) {
+        randDir = -randDir;
+    }
+    return randDir;
 }

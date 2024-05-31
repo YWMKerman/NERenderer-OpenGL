@@ -9,7 +9,7 @@ MaterialData Material::GetMaterialData() const {
 }
 
 Lambertian::Lambertian(Spectrum s, Spectrum glow) {
-    materialData.type = 0;
+    materialData.type = 0.0f;
 
     materialData.kd[0] = s[0];
     materialData.kd[1] = s[1];

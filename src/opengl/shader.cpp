@@ -115,8 +115,8 @@ void Shader::SetUniform(const char *name, int var1, int var2, int var3) {
 void Shader::SetUniform(const char *name, int *var, int num) {
     switch (num) {
         case 1: glUniform1iv(GetUniform(name), 1, var); break;
-        case 2: glUniform2iv(GetUniform(name), 2, var); break;
-        case 3: glUniform3iv(GetUniform(name), 3, var); break;
+        case 2: glUniform2iv(GetUniform(name), 1, var); break;
+        case 3: glUniform3iv(GetUniform(name), 1, var); break;
         default:
             cout << "[Error] Shader: Uniform variable number error.\n" << endl;
             exit(-1);
@@ -138,8 +138,8 @@ void Shader::SetUniform(const char *name, unsigned int var1, unsigned int var2, 
 void Shader::SetUniform(const char *name, unsigned int *var, int num) {
     switch (num) {
         case 1: glUniform1uiv(GetUniform(name), 1, var); break;
-        case 2: glUniform2uiv(GetUniform(name), 2, var); break;
-        case 3: glUniform3uiv(GetUniform(name), 3, var); break;
+        case 2: glUniform2uiv(GetUniform(name), 1, var); break;
+        case 3: glUniform3uiv(GetUniform(name), 1, var); break;
         default:
             cout << "[Error] Shader: Uniform variable number error.\n" << endl;
             exit(-1);
@@ -161,8 +161,8 @@ void Shader::SetUniform(const char *name, float var1, float var2, float var3) {
 void Shader::SetUniform(const char *name, float *var, int num) {
     switch (num) {
         case 1: glUniform1fv(GetUniform(name), 1, var); break;
-        case 2: glUniform2fv(GetUniform(name), 2, var); break;
-        case 3: glUniform3fv(GetUniform(name), 3, var); break;
+        case 2: glUniform2fv(GetUniform(name), 1, var); break;
+        case 3: glUniform3fv(GetUniform(name), 1, var); break;
         default:
             cout << "[Error] Shader: Uniform variable number error.\n" << endl;
             exit(-1);

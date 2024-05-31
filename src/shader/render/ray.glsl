@@ -7,7 +7,7 @@ struct Ray {
     float tMax;
 };
 
-Ray ray(vec3 origin, vec3 dir, float tMin, float tMax) {
+Ray RayInit(vec3 origin, vec3 dir, float tMin, float tMax) {
     Ray ray;
     ray.origin = origin;
     ray.dir = dir;
@@ -16,6 +16,6 @@ Ray ray(vec3 origin, vec3 dir, float tMin, float tMax) {
     return ray;
 }
 
-vec3 rayAt(Ray r, float t) {
-    return r.origin + r.dir * t;
+vec3 RayAt(Ray ray, float t) {
+    return ray.origin + ray.dir * t;
 }

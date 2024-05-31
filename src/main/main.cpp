@@ -72,6 +72,6 @@ int main() {
             )
     );
 
-    Renderer renderer(scene, camera);
+    Renderer renderer(scene, camera, 100, 0.8, 2.2, false);
     renderer.Render();
 }

@@ -2,26 +2,23 @@
 
 #include "shape.glsl"
 #include "material.glsl"
-#include "intersectinfo.glsl"
 #include "objectptr.glsl"
-
-uniform sampler2D objectList;
 
 struct Object {
     Shape shape;
     Material material;
 };
 
-Object object(ObjectPtr objPtr) {
+Object ObjectInit(ObjectPtr objPtr) {
     vec4 shapeData[3];
     vec4 materialData[2];
     float index = float(objPtr.index);
 
-    shapeData[0] = texture1D(objectList, (index + 0 + 0.5f) / objNum);
-    shapeData[1] = texture1D(objectList, (index + 1 + 0.5f) / objNum);
-    shapeData[2] = texture1D(objectList, (index + 2 + 0.5f) / objNum);
-    materialData[0] = texture1D(objectList, (index + 3 + 0.5f) / objNum);
-    materialData[1] = texture1D(objectList, (index + 4 + 0.5f) / objNum);
+    shapeData[0] = texture1D(objectList, (index + 0 + 0.5f) / objectNum);
+    shapeData[1] = texture1D(objectList, (index + 1 + 0.5f) / objectNum);
+    shapeData[2] = texture1D(objectList, (index + 2 + 0.5f) / objectNum);
+    materialData[0] = texture1D(objectList, (index + 3 + 0.5f) / objectNum);
+    materialData[1] = texture1D(objectList, (index + 4 + 0.5f) / objectNum);
 
     Shape shape;
     shape.type = shapeData[0].x;
@@ -44,10 +41,24 @@ Object object(ObjectPtr objPtr) {
     return obj;
 }
 
-IntersectInfo objectIntersect(ObjectPtr objPtr, Ray r) {
-    Object obj = object(objPtr);
-}
+Object ObjectInitEmpty() {
+    Shape shape;
+    shape.type = 0.0f;
+    shape.p0 = vec3(0.0f, 0.0f, 0.0f);
+    shape.radius = 0.0f;
+    shape.p1 = vec3(0.0f, 0.0f, 0.0f);
+    shape.reverseNormal = 0.0f;
+    shape.p2 = vec3(0.0f, 0.0f, 0.0f);
 
-bool objectIsIntersect(ObjectPtr objPtr, Ray r) {
-    Object obj = object(objPtr);
+    Material material;
+    material.type = 0.0f;
+    material.kd = vec3(0.0f, 0.0f, 0.0f);
+    material.isGlow = 0.0f;
+    material.glowSpectrum = vec3(0.0f, 0.0f, 0.0f);
+
+    Object obj;
+    obj.shape = shape;
+    obj.material = material;
+
+    return obj;
 }

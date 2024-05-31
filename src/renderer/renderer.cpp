@@ -38,11 +38,24 @@ const unsigned int Renderer::faces[] = {
     1, 2, 3  // Second Triangle
 };
 
-Renderer::Renderer(Scene &scene, const Camera &camera):
-    camera(camera) {
+Renderer::Renderer(Scene &scene,
+                   const Camera &camera,
+                   int maxDepth,
+                   float russianRoulete,
+                   float gamma,
+                   bool accumulate):
+
+                   camera(camera),
+                   maxDepth(maxDepth),
+                   russianRoulete(russianRoulete),
+                   gamma(gamma),
+                   accumulate(accumulate) {
+
     objectListData = scene.GetObjectList(&objectListDataLength);
     packPerObject = sizeof(ObjectData) / (4 * sizeof(float));
-    randomSeed = NULL;
+    screenWidth = camera.GetScreenWidth();
+    screenHeight = camera.GetScreenHeight();
+    randomSeed = new unsigned int[screenWidth * screenHeight];
 }
 
 Renderer::~Renderer() {
@@ -50,9 +63,7 @@ Renderer::~Renderer() {
 }
 
 void Renderer::Render() {
-    int width = camera.GetScreenWidth();
-    int height = camera.GetScreenHeight();
-    OpenGLWindow openglwindow(width, height, true, "NERenderer");
+    OpenGLWindow openglwindow(screenWidth, screenHeight, true, "NERenderer");
     openglwindow.LoadOpenGLFunctions();
 
     Shader renderShader(VERTEX_SHADER_PATH, RENDER_FRAGMENT_SHADER_PATH);
@@ -73,8 +84,8 @@ void Renderer::Render() {
 
     FrameBuffer frame;
 
-    Texture2D frameTexture(width,
-                           height,
+    Texture2D frameTexture(screenWidth,
+                           screenHeight,
                            GL_CLAMP_TO_EDGE,
                            GL_NEAREST,
                            GL_RGBA32F,
@@ -85,19 +96,20 @@ void Renderer::Render() {
     frame.BindTexture(frameTexture.GetTextureID());
 
     default_random_engine engine(time(0));
-    randomSeed = new unsigned int[width * height];
-    for (int i = 0; i < width * height; i++) {
+    for (int i = 0; i < screenWidth * screenHeight; i++) {
         randomSeed[i] = engine();
     }
 
-    Texture2D randomSeedTexture(width,
-                                height,
+    Texture2D randomSeedTexture(screenWidth,
+                                screenHeight,
                                 GL_CLAMP_TO_EDGE,
                                 GL_NEAREST,
                                 GL_R32F,
                                 GL_RED,
                                 GL_UNSIGNED_INT,
                                 (char *) randomSeed);
+
+    int frameCount = 1;
 
     openglwindow.RenderLoop(
         [&] (GLFWwindow *window) {
@@ -111,9 +123,11 @@ void Renderer::Render() {
             // Bind Frame Buffer to Frame Buffer Texture
             glBindFramebuffer(GL_FRAMEBUFFER, frame.GetFrameBufferID());
 
-            // Clear Frame Buffer Texture
-            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+            if (!accumulate) {
+                // Clear Frame Buffer Texture
+                glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT);
+            }
 
             // Activate Frame Buffer Texture
             glActiveTexture(GL_TEXTURE0);
@@ -123,34 +137,30 @@ void Renderer::Render() {
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_1D, objectListTexture.GetTextureID());
 
-            // Update Random Seed Texture
-            for (int i = 0; i < width * height; i++) {
-                randomSeed[i] = engine();
-            }
-
-            randomSeedTexture.UpdateTexture(width,
-                                            height,
-                                            GL_CLAMP_TO_EDGE,
-                                            GL_NEAREST,
-                                            GL_R32F,
-                                            GL_RED,
-                                            GL_UNSIGNED_INT,
-                                            (char *) randomSeed);
-
             // Activate Random Seed Texture
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, randomSeedTexture.GetTextureID());
 
             // Initialize Uniform Variables
-            // renderShader.SetUniform("lastRenderResult", (int) 0);
+            if (accumulate) {
+                renderShader.SetUniform("accumulate", 1);
+            }
+            else {
+                renderShader.SetUniform("accumulate", 0);
+            }
             camera.SetCameraUniform(&renderShader);
+            renderShader.SetUniform("lastRenderResult", 0);
+            renderShader.SetUniform("frameCount", frameCount);
             renderShader.SetUniform("objectNum", objectListDataLength);
             renderShader.SetUniform("packPerObject", packPerObject);
             renderShader.SetUniform("objectList", 1);
             renderShader.SetUniform("randomSeed", 2);
+            renderShader.SetUniform("renderer.maxDepth", maxDepth);
+            renderShader.SetUniform("renderer.russianRoulete", russianRoulete);
+            renderShader.SetUniform("gamma", gamma);
             renderShader.SetUniform("screenGeometry",
-                                    (unsigned int) width,
-                                    (unsigned int) height);
+                                    (unsigned int) screenWidth,
+                                    (unsigned int) screenHeight);
 
             // Render Image to Frame Buffer Texture
             glUseProgram(renderShader.GetShaderProgramID());
@@ -175,10 +185,10 @@ void Renderer::Render() {
             glBindTexture(GL_TEXTURE_2D, frameTexture.GetTextureID());
 
             // Initialize Uniform Variables
-            displayShader.SetUniform("lastRenderResult", (int) 0);
+            displayShader.SetUniform("lastRenderResult", 0);
             displayShader.SetUniform("screenGeometry",
-                                    (unsigned int) width,
-                                    (unsigned int) height);
+                                    (unsigned int) screenWidth,
+                                    (unsigned int) screenHeight);
 
             // Display Image on Screen
             glUseProgram(displayShader.GetShaderProgramID());
@@ -188,6 +198,23 @@ void Renderer::Render() {
 
             /*** End Display Image ***/
 
+
+            // Update Random Seed Texture
+            for (int i = 0; i < screenWidth * screenHeight; i++) {
+                randomSeed[i] = engine();
+            }
+
+            randomSeedTexture.UpdateTexture(screenWidth,
+                                            screenHeight,
+                                            GL_CLAMP_TO_EDGE,
+                                            GL_NEAREST,
+                                            GL_R32F,
+                                            GL_RED,
+                                            GL_UNSIGNED_INT,
+                                            (char *) randomSeed);
+
+            // Increase Frame Count
+            frameCount++;
 
             // Swap Buffers and Pull Events
             glfwSwapBuffers(window);

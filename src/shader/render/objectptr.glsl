@@ -4,20 +4,17 @@ struct ObjectPtr {
     uint index;
 };
 
-uniform uint objectNum;
-uniform uint packPerObject;
-
-ObjectPtr objectPtr(uint index) {
+ObjectPtr ObjectPtrInit(uint index) {
     ObjectPtr objPtr;
     objPtr.index = index;
     return objPtr;
 }
 
-bool objectPtrEOF(ObjectPtr objPtr) {
+bool ObjectPtrEOF(ObjectPtr objPtr) {
     return objPtr.index >= objectNum * packPerObject;
 }
 
-ObjectPtr objectPtrNext(ObjectPtr objPtr) {
+ObjectPtr ObjectPtrNext(ObjectPtr objPtr) {
     objPtr.index += packPerObject;
     return objPtr;
 }

@@ -75,9 +75,6 @@ int Camera::GetScreenHeight() const {
 }
 
 void Camera::SetCameraUniform(Shader *shader) const {
-    shader->SetUniform("camera.width", cameraData.width);
-    shader->SetUniform("camera.height", cameraData.height);
-
     shader->SetUniform("camera.pos", (float *) &cameraData.pos, 3);
 
     shader->SetUniform("camera.look", (float *) &cameraData.look, 3);
