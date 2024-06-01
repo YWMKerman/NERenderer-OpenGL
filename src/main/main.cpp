@@ -12,14 +12,15 @@
 #include "../renderer/include/renderer.hpp"
 
 int main() {
-    Camera camera(800,                      // width
-                  600,                      // height
-                  Vector3(0.0, -5.0,  0.0), // pos
-                  Vector3(0.0,  1.0,  0.0), // look
-                  Vector3(0.0,  0.0,  1.0), // up
-                  60,                       // fov
-                  1,                        // focalLength
-                  0.1                       // lenRadius
+    Camera camera(
+            800,                      // width
+            600,                      // height
+            Vector3(0.0, -5.0,  0.0), // pos
+            Vector3(0.0,  1.0,  0.0), // look
+            Vector3(0.0,  0.0,  1.0), // up
+            60,                       // fov
+            1,                        // focalLength
+            0.1                       // lenRadius
     );
 
     Scene scene;
@@ -68,7 +69,7 @@ int main() {
     scene.AddObject(
             Object(
                 Sphere(Vector3(0.3, -1, -0.3), 0.2, false),
-                Lambertian(Spectrum(1.0, 1.0, 1.0), Spectrum(10.0, 10.0, 10.0))
+                Lambertian(Spectrum(1.0, 1.0, 1.0), Spectrum(2.0, 2.0, 2.0))
             )
     );
 

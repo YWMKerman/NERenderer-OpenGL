@@ -10,9 +10,8 @@ uniform bool accumulate;
 uniform int frameCount;
 
 uniform sampler1D objectList;
-uniform uint objectNum;
-uniform uint packNum;
 uniform uint packPerObject;
+uniform uint packNum;
 
 uniform float gamma;
 

@@ -45,14 +45,13 @@ Renderer::Renderer(Scene &scene,
                    float gamma,
                    bool accumulate):
 
+                   scene(scene),
                    camera(camera),
                    maxDepth(maxDepth),
                    russianRoulete(russianRoulete),
                    gamma(gamma),
                    accumulate(accumulate) {
 
-    objectListData = scene.GetObjectList(&objectListDataLength);
-    packPerObject = sizeof(ObjectData) / (4 * sizeof(float));
     screenWidth = camera.GetScreenWidth();
     screenHeight = camera.GetScreenHeight();
     randomSeed = new unsigned int[screenWidth * screenHeight];
@@ -74,13 +73,7 @@ void Renderer::Render() {
               (unsigned int *) faces,
               ArrayLength(faces));
 
-    Texture1D objectListTexture(objectListDataLength * packPerObject,
-                                GL_CLAMP_TO_EDGE,
-                                GL_NEAREST,
-                                GL_RGBA32F,
-                                GL_RGBA,
-                                GL_FLOAT,
-                                (char *) objectListData);
+    Texture1D sceneTexture = scene.CreateSceneTexture();
 
     FrameBuffer frame;
 
@@ -135,7 +128,7 @@ void Renderer::Render() {
 
             // Activate Object List Texture
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_1D, objectListTexture.GetTextureID());
+            glBindTexture(GL_TEXTURE_1D, sceneTexture.GetTextureID());
 
             // Activate Random Seed Texture
             glActiveTexture(GL_TEXTURE2);
@@ -148,16 +141,14 @@ void Renderer::Render() {
             else {
                 renderShader.SetUniform("accumulate", 0);
             }
+            scene.SetSceneUniform(&renderShader, 1);
             camera.SetCameraUniform(&renderShader);
-            renderShader.SetUniform("lastRenderResult", 0);
-            renderShader.SetUniform("frameCount", frameCount);
-            renderShader.SetUniform("objectNum", objectListDataLength);
-            renderShader.SetUniform("packPerObject", packPerObject);
-            renderShader.SetUniform("packNum", objectListDataLength * packPerObject);
-            renderShader.SetUniform("objectList", 1);
-            renderShader.SetUniform("randomSeed", 2);
             renderShader.SetUniform("renderer.maxDepth", maxDepth);
             renderShader.SetUniform("renderer.russianRoulete", russianRoulete);
+
+            renderShader.SetUniform("lastRenderResult", 0);
+            renderShader.SetUniform("frameCount", frameCount);
+            renderShader.SetUniform("randomSeed", 2);
             renderShader.SetUniform("gamma", gamma);
             renderShader.SetUniform("screenGeometry",
                                     (unsigned int) screenWidth,

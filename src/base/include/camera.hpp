@@ -7,9 +7,6 @@
 #include "../../opengl/include/shader.hpp"
 
 typedef struct CameraData {
-    int width;
-    int height;
-
     float pos[3];
 
     float look[3];
@@ -37,10 +34,12 @@ class Camera {
                float lenRadius); 
 
         CameraData GetCameraData() const;
-        void SetCameraUniform(Shader *shader) const;
         int GetScreenWidth() const;
         int GetScreenHeight() const;
+        void SetCameraUniform(Shader *shader) const;
 
     private:
         CameraData cameraData;
+        int screenWidth;
+        int screenHeight;
 };

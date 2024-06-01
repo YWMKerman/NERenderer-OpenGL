@@ -15,7 +15,10 @@ Camera::Camera(int width,
                Vector3 up,
                float fov,
                float focalLength,
-               float lenRadius) {
+               float lenRadius):
+
+               screenWidth(width),
+               screenHeight(height) {
 
     look = Vector3::Normalize(look);
     up = Vector3::Normalize(up);
@@ -30,9 +33,6 @@ Camera::Camera(int width,
     Vector3 screenLowerLeftCorner = origin + look * focalLength
                                     - right * screenPlaneWidth / 2
                                     - newUp * screenPlaneHeight / 2;
-
-    cameraData.width = width;
-    cameraData.height = height;
 
     cameraData.pos[0] = pos[0];
     cameraData.pos[1] = pos[1];
@@ -67,11 +67,11 @@ CameraData Camera::GetCameraData() const {
 }
 
 int Camera::GetScreenWidth() const {
-    return cameraData.width;
+    return screenWidth;
 }
 
 int Camera::GetScreenHeight() const {
-    return cameraData.height;
+    return screenHeight;
 }
 
 void Camera::SetCameraUniform(Shader *shader) const {

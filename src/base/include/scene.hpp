@@ -3,6 +3,8 @@
 #pragma once
 
 #include "object.hpp"
+#include "../../opengl/include/shader.hpp"
+#include "../../opengl/include/texture1D.hpp"
 
 #include <vector>
 
@@ -14,8 +16,10 @@ class Scene {
         ~Scene();
 
         Scene & AddObject(const Object &object);
-        ObjectData * GetObjectList(unsigned int *length) const;
+        Texture1D CreateSceneTexture();
+        void SetSceneUniform(Shader *shader, int sceneTextureUnit);
 
     private:
-        vector<ObjectData> *objectList;
+        vector<ObjectData> *scene;
+        unsigned int packPerObject;
 };
