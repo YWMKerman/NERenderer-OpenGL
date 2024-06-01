@@ -104,8 +104,8 @@ void Renderer::Render() {
                                 screenHeight,
                                 GL_CLAMP_TO_EDGE,
                                 GL_NEAREST,
-                                GL_R32F,
-                                GL_RED,
+                                GL_R32UI,
+                                GL_RED_INTEGER,
                                 GL_UNSIGNED_INT,
                                 (char *) randomSeed);
 
@@ -153,6 +153,7 @@ void Renderer::Render() {
             renderShader.SetUniform("frameCount", frameCount);
             renderShader.SetUniform("objectNum", objectListDataLength);
             renderShader.SetUniform("packPerObject", packPerObject);
+            renderShader.SetUniform("packNum", objectListDataLength * packPerObject);
             renderShader.SetUniform("objectList", 1);
             renderShader.SetUniform("randomSeed", 2);
             renderShader.SetUniform("renderer.maxDepth", maxDepth);
@@ -208,8 +209,8 @@ void Renderer::Render() {
                                             screenHeight,
                                             GL_CLAMP_TO_EDGE,
                                             GL_NEAREST,
-                                            GL_R32F,
-                                            GL_RED,
+                                            GL_R32UI,
+                                            GL_RED_INTEGER,
                                             GL_UNSIGNED_INT,
                                             (char *) randomSeed);
 

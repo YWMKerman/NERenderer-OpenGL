@@ -1,6 +1,6 @@
 // random.glsl
 
-uniform sampler2D randomSeed;
+uniform usampler2D randomSeed;
 
 const uint LCG_A = uint(16807);
 const uint LCG_C = uint(0);
@@ -9,7 +9,7 @@ const uint LCG_M = uint(2147483647);
 uint seed;
 
 void RandomInit(vec2 screenIndex) {
-    seed = uint(texture2D(randomSeed, screenIndex / screenGeometry).x);
+    seed = texture(randomSeed, screenIndex / screenGeometry).x;
 }
 
 uint RandomUint() {

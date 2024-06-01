@@ -23,9 +23,9 @@ Shape ShapeInit(ObjectPtr objPtr) {
     vec4 shapeData[3];
     float index = float(objPtr.index);
 
-    shapeData[0] = texture1D(objectList, (index + 0 + 0.5f) / objectNum);
-    shapeData[1] = texture1D(objectList, (index + 1 + 0.5f) / objectNum);
-    shapeData[2] = texture1D(objectList, (index + 2 + 0.5f) / objectNum);
+    shapeData[0] = texture1D(objectList, (index + 0 + 0.5f) / packNum);
+    shapeData[1] = texture1D(objectList, (index + 1 + 0.5f) / packNum);
+    shapeData[2] = texture1D(objectList, (index + 2 + 0.5f) / packNum);
 
     Shape shape;
     shape.type = shapeData[0].x;
@@ -53,17 +53,18 @@ Shape ShapeInitEmpty() {
 IntersectInfo SphereIntersect(vec3 origin, float radius, Ray ray, bool reverseNormal) {
     vec3 ro = ray.origin;
     vec3 so = origin;
+    vec3 ro2so = ro - so;
     vec3 d = ray.dir;
 
     // Use this if the ray direction is not normalized.
     //
     // float a = dot(d, d);
-    // float b = 2 * dot(d, ro - so);
-    // float c = dot(ro, ro) + dot(so, so) - radius * radius;
+    // float b = 2 * dot(d, ro2so);
+    // float c = dot(ro2so, ro2so) - radius * radius;
 
     float a = 1.0f;
-    float b = 2 * dot(d, ro - so);
-    float c = dot(ro, ro) + dot(so, so) - radius * radius;
+    float b = 2 * dot(d, ro2so);
+    float c = dot(ro2so, ro2so) - radius * radius;
 
     float delta = b * b - 4 * a * c;
     if (delta > 0) {
@@ -105,17 +106,18 @@ IntersectInfo SphereIntersect(vec3 origin, float radius, Ray ray, bool reverseNo
 bool SphereIsIntersect(vec3 origin, float radius, Ray ray) {
     vec3 ro = ray.origin;
     vec3 so = origin;
+    vec3 ro2so = ro - so;
     vec3 d = ray.dir;
 
     // Use this if the ray direction is not normalized.
     //
     // float a = dot(d, d);
-    // float b = 2 * dot(d, ro - so);
-    // float c = dot(ro, ro) + dot(so, so) - radius * radius;
+    // float b = 2 * dot(d, ro2so);
+    // float c = dot(ro2so, ro2so) - radius * radius;
 
     float a = 1.0f;
-    float b = 2 * dot(d, ro - so);
-    float c = dot(ro, ro) + dot(so, so) - radius * radius;
+    float b = 2 * dot(d, ro2so);
+    float c = dot(ro2so, ro2so) - radius * radius;
 
     float delta = b * b - 4 * a * c;
     if (delta > 0) {

@@ -11,7 +11,7 @@ ObjectPtr ObjectPtrInit(uint index) {
 }
 
 bool ObjectPtrEOF(ObjectPtr objPtr) {
-    return objPtr.index >= objectNum * packPerObject;
+    return objPtr.index >= packNum;
 }
 
 ObjectPtr ObjectPtrNext(ObjectPtr objPtr) {

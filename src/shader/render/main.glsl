@@ -2,8 +2,6 @@
 
 #version 330 core
 
-layout (origin_upper_left) in vec4 gl_FragCoord;
-
 out vec4 outColor;
 
 uniform sampler2D lastRenderResult;
@@ -13,6 +11,7 @@ uniform int frameCount;
 
 uniform sampler1D objectList;
 uniform uint objectNum;
+uniform uint packNum;
 uniform uint packPerObject;
 
 uniform float gamma;
@@ -32,6 +31,7 @@ void main() {
     vec2 screenIndex = gl_FragCoord.xy;
     RandomInit(screenIndex);
     Ray ray = CameraGetSampleRay(screenIndex);
+
     vec3 result = PathTracing(ray);
     float invGamma = 1.0f / gamma;
     result = vec3(pow(result.x, invGamma),

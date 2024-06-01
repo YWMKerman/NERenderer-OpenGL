@@ -27,9 +27,9 @@ Camera::Camera(int width,
     Vector3 origin = pos + look * focalLength;
     float screenPlaneWidth = 2 * tan(TORADIAN(fov / 2)) * focalLength;
     float screenPlaneHeight = screenPlaneWidth / aspect;
-    Vector3 screenUpperLeftCorner = origin
+    Vector3 screenLowerLeftCorner = origin + look * focalLength
                                     - right * screenPlaneWidth / 2
-                                    + newUp * screenPlaneHeight / 2;
+                                    - newUp * screenPlaneHeight / 2;
 
     cameraData.width = width;
     cameraData.height = height;
@@ -50,9 +50,9 @@ Camera::Camera(int width,
     cameraData.right[1] = right[1];
     cameraData.right[2] = right[2];
 
-    cameraData.screenUpperLeftCorner[0] = screenUpperLeftCorner[0];
-    cameraData.screenUpperLeftCorner[1] = screenUpperLeftCorner[1];
-    cameraData.screenUpperLeftCorner[2] = screenUpperLeftCorner[2];
+    cameraData.screenLowerLeftCorner[0] = screenLowerLeftCorner[0];
+    cameraData.screenLowerLeftCorner[1] = screenLowerLeftCorner[1];
+    cameraData.screenLowerLeftCorner[2] = screenLowerLeftCorner[2];
 
     cameraData.screenPlaneWidth = screenPlaneWidth;
     cameraData.screenPlaneHeight = screenPlaneHeight;
@@ -81,7 +81,7 @@ void Camera::SetCameraUniform(Shader *shader) const {
     shader->SetUniform("camera.up", (float *) &cameraData.up, 3);
     shader->SetUniform("camera.right", (float *) &cameraData.right, 3);
 
-    shader->SetUniform("camera.screenUpperLeftCorner", (float *) &cameraData.screenUpperLeftCorner, 3);
+    shader->SetUniform("camera.screenLowerLeftCorner", (float *) &cameraData.screenLowerLeftCorner, 3);
 
     shader->SetUniform("camera.screenPlaneWidth", cameraData.screenPlaneWidth);
     shader->SetUniform("camera.screenPlaneHeight", cameraData.screenPlaneHeight);

@@ -16,7 +16,7 @@ typedef struct CameraData {
     float up[3];
     float right[3];
 
-    float screenUpperLeftCorner[3];
+    float screenLowerLeftCorner[3];
     float screenPlaneWidth;
     float screenPlaneHeight;
 

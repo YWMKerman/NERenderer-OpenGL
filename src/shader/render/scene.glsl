@@ -13,10 +13,11 @@ IntersectInfo SceneIntersect(Ray ray) {
          objPtr = ObjectPtrNext(objPtr)) {
 
         Shape shape = ShapeInit(objPtr);
-        isect = ShapeIntersect(shape, ray);
-        if (isect.isHit) {
+        IntersectInfo tempIsect = ShapeIntersect(shape, ray);
+        if (tempIsect.isHit) {
             Material material = MaterialInit(objPtr);
-            ray.tMax = isect.tHit;
+            ray.tMax = tempIsect.tHit;
+            isect = tempIsect;
             isect.hitMaterial = material;
         }
     }

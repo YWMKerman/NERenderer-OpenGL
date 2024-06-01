@@ -175,7 +175,7 @@ int Shader::GetUniform(const char *name) {
     if (uniform == -1) {
         cout << "[Error] Shader: Failed to locate uniform variable \""
              << name << "\".\n" << endl;
-        exit(-1);
+        // exit(-1);
     }
     return uniform;
 }

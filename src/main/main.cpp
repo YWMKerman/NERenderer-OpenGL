@@ -27,7 +27,7 @@ int main() {
     // Left Wall
     scene.AddObject(
             Object(
-                Sphere(Vector3(-101, 0, 0), 100, false),
+                Sphere(Vector3(-1000, 0, 0), 999.3, false),
                 Lambertian(Spectrum(1.0, 0.0, 0.0), Spectrum(0.0, 0.0, 0.0))
             )
     );
@@ -35,7 +35,7 @@ int main() {
     // Right Wall
     scene.AddObject(
             Object(
-                Sphere(Vector3(101, 0, 0), 100, false),
+                Sphere(Vector3(1000, 0, 0), 999.3, false),
                 Lambertian(Spectrum(0.0, 1.0, 0.0), Spectrum(0.0, 0.0, 0.0))
             )
     );
@@ -43,7 +43,7 @@ int main() {
     // Upper Wall
     scene.AddObject(
             Object(
-                Sphere(Vector3(0, 0, 101), 100, false),
+                Sphere(Vector3(0, 0, 1000), 999.5, false),
                 Lambertian(Spectrum(1.0, 1.0, 1.0), Spectrum(0.0, 0.0, 0.0))
             )
     );
@@ -51,7 +51,7 @@ int main() {
     // Bottom Wall
     scene.AddObject(
             Object(
-                Sphere(Vector3(0, 0, -101), 100, false),
+                Sphere(Vector3(0, 0, -1000), 999.5, false),
                 Lambertian(Spectrum(1.0, 1.0, 1.0), Spectrum(0.0, 0.0, 0.0))
             )
     );
@@ -59,7 +59,7 @@ int main() {
     // Inside Wall
     scene.AddObject(
             Object(
-                Sphere(Vector3(0, 101, 0), 100, false),
+                Sphere(Vector3(0, 1000, 0), 999, false),
                 Lambertian(Spectrum(1.0, 1.0, 1.0), Spectrum(0.0, 0.0, 0.0))
             )
     );
@@ -67,11 +67,11 @@ int main() {
     // Glowing Sphere
     scene.AddObject(
             Object(
-                Sphere(Vector3(0, 0, 0.2), 0.2, false),
-                Lambertian(Spectrum(1.0, 1.0, 1.0), Spectrum(1.0, 1.0, 1.0))
+                Sphere(Vector3(0.3, -1, -0.3), 0.2, false),
+                Lambertian(Spectrum(1.0, 1.0, 1.0), Spectrum(10.0, 10.0, 10.0))
             )
     );
 
-    Renderer renderer(scene, camera, 100, 0.8, 2.2, false);
+    Renderer renderer(scene, camera, 100, 0.8, 2.2, true);
     renderer.Render();
 }

@@ -16,8 +16,8 @@ Material MaterialInit(ObjectPtr objPtr) {
     vec4 materialData[2];
     float index = float(objPtr.index);
 
-    materialData[0] = texture1D(objectList, (index + 3 + 0.5f) / objectNum);
-    materialData[1] = texture1D(objectList, (index + 4 + 0.5f) / objectNum);
+    materialData[0] = texture1D(objectList, (index + 3 + 0.5f) / packNum);
+    materialData[1] = texture1D(objectList, (index + 4 + 0.5f) / packNum);
 
     Material material;
     material.type = materialData[0].x;
