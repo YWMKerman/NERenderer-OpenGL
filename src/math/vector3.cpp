@@ -41,7 +41,7 @@ float Vector3::operator[](unsigned int i) {
         case 1: return y;
         case 2: return z;
         default:
-            cout << "[Error] Vector3: Index out of range.\n" << endl;
+            cout << "[Error] Vector3: Index out of range." << endl;
             exit(-1);
     }
 }

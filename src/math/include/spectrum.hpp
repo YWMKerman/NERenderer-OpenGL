@@ -9,9 +9,9 @@ class Spectrum {
         float r, g, b;
 
         bool IsBlack();
-        bool IsNeg();
-        bool IsInf();
-        bool IsNaN();
+        bool HasNeg();
+        bool HasInf();
+        bool HasNaN();
 
         Spectrum operator+(Spectrum s);
         Spectrum operator-(Spectrum s);

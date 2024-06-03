@@ -33,6 +33,8 @@ main: third-party/glad/src/glad.o \
 	  \
 	  src/renderer/renderer.o \
 	  \
+	  src/parser/sceneparser.o \
+	  \
 	  src/main/main.o
 	@echo Linking Project...
 	@mkdir -p $(BIN_DIR)

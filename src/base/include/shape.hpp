@@ -25,7 +25,7 @@ typedef struct ShapeData {
 
 class Shape {
     public:
-        Shape() {};
+        Shape();
         ShapeData GetShapeData() const;
 
     protected:

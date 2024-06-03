@@ -12,18 +12,18 @@ Spectrum::Spectrum(): r(0), g(0), b(0) {}
 Spectrum::Spectrum(float r, float g, float b): r(r), g(g), b(b) {}
 
 bool Spectrum::IsBlack() {
-    return (r == 0.0f) || (g == 0.0f) || (b == 0.0f);
+    return (r == 0.0f) && (g == 0.0f) && (b == 0.0f);
 }
 
-bool Spectrum::IsNeg() {
+bool Spectrum::HasNeg() {
     return (r < 0.0f) || (g < 0.0f) || (b < 0.0f);
 }
 
-bool Spectrum::IsInf() {
+bool Spectrum::HasInf() {
     return isinf(r) || isinf(g) || isinf(b);
 }
 
-bool Spectrum::IsNaN() {
+bool Spectrum::HasNaN() {
     return isnan(r) || isnan(g) || isnan(b);
 }
 
@@ -57,7 +57,7 @@ float Spectrum::operator[](unsigned int i) {
         case 1: return g;
         case 2: return b;
         default:
-            cout << "[Error] Spectrum: Index out of range.\n" << endl;
+            cout << "[Error] Spectrum: Index out of range." << endl;
             exit(-1);
     }
 }

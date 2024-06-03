@@ -15,14 +15,14 @@
 #include "../../third-party/glad/include/glad/glad.h"
 #include <GLFW/glfw3.h>
 
+#include <memory>
 #include <random>
 
 #define ArrayLength(_array) ((unsigned int) (sizeof(_array) / sizeof(*_array)))
 
-#define PROJECT_ROOT "/data/data/com.termux/files/home/workspace/NERenderer-OpenGL/"
-#define VERTEX_SHADER_PATH PROJECT_ROOT "src/shader/vertex.glsl"
-#define RENDER_FRAGMENT_SHADER_PATH PROJECT_ROOT "src/shader/render.glsl"
-#define DISPLAY_FRAGMENT_SHADER_PATH PROJECT_ROOT "src/shader/display.glsl"
+#define VERTEX_SHADER_PATH "src/shader/vertex.glsl"
+#define RENDER_FRAGMENT_SHADER_PATH "src/shader/render.glsl"
+#define DISPLAY_FRAGMENT_SHADER_PATH "src/shader/display.glsl"
 
 using namespace std;
 
@@ -38,8 +38,8 @@ const unsigned int Renderer::faces[] = {
     1, 2, 3  // Second Triangle
 };
 
-Renderer::Renderer(Scene &scene,
-                   const Camera &camera,
+Renderer::Renderer(shared_ptr<Scene> scene,
+                   shared_ptr<Camera> camera,
                    int maxDepth,
                    float russianRoulete,
                    float gamma,
@@ -52,8 +52,8 @@ Renderer::Renderer(Scene &scene,
                    gamma(gamma),
                    accumulate(accumulate) {
 
-    screenWidth = camera.GetScreenWidth();
-    screenHeight = camera.GetScreenHeight();
+    screenWidth = camera->GetScreenWidth();
+    screenHeight = camera->GetScreenHeight();
     randomSeed = new unsigned int[screenWidth * screenHeight];
 }
 
@@ -73,7 +73,7 @@ void Renderer::Render() {
               (unsigned int *) faces,
               ArrayLength(faces));
 
-    Texture1D sceneTexture = scene.CreateSceneTexture();
+    Texture1D sceneTexture = scene->CreateSceneTexture();
 
     FrameBuffer frame;
 
@@ -105,7 +105,7 @@ void Renderer::Render() {
     int frameCount = 1;
 
     openglwindow.RenderLoop(
-        [&] (GLFWwindow *window) {
+        [&, scene = scene, camera = camera] (GLFWwindow *window) {
             // Process Input
             if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
@@ -126,7 +126,7 @@ void Renderer::Render() {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, frameTexture.GetTextureID());
 
-            // Activate Object List Texture
+            // Activate Scene Texture
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_1D, sceneTexture.GetTextureID());
 
@@ -141,14 +141,15 @@ void Renderer::Render() {
             else {
                 renderShader.SetUniform("accumulate", 0);
             }
-            scene.SetSceneUniform(&renderShader, 1);
-            camera.SetCameraUniform(&renderShader);
+            scene->SetSceneUniform(&renderShader, 1);
+            camera->SetCameraUniform(&renderShader);
             renderShader.SetUniform("renderer.maxDepth", maxDepth);
             renderShader.SetUniform("renderer.russianRoulete", russianRoulete);
 
             renderShader.SetUniform("lastRenderResult", 0);
             renderShader.SetUniform("frameCount", frameCount);
             renderShader.SetUniform("randomSeed", 2);
+            renderShader.SetUniform("extraSeed", engine());
             renderShader.SetUniform("gamma", gamma);
             renderShader.SetUniform("screenGeometry",
                                     (unsigned int) screenWidth,
@@ -190,20 +191,6 @@ void Renderer::Render() {
 
             /*** End Display Image ***/
 
-
-            // Update Random Seed Texture
-            for (int i = 0; i < screenWidth * screenHeight; i++) {
-                randomSeed[i] = engine();
-            }
-
-            randomSeedTexture.UpdateTexture(screenWidth,
-                                            screenHeight,
-                                            GL_CLAMP_TO_EDGE,
-                                            GL_NEAREST,
-                                            GL_R32UI,
-                                            GL_RED_INTEGER,
-                                            GL_UNSIGNED_INT,
-                                            (char *) randomSeed);
 
             // Increase Frame Count
             frameCount++;

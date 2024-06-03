@@ -33,9 +33,9 @@ void main() {
 
     vec3 result = PathTracing(ray);
     float invGamma = 1.0f / gamma;
-    result = vec3(pow(result.x, invGamma),
-                  pow(result.y, invGamma),
-                  pow(result.z, invGamma));
+    result = vec3(clamp(pow(result.x, invGamma), 0, 1),
+                  clamp(pow(result.y, invGamma), 0, 1),
+                  clamp(pow(result.z, invGamma), 0, 1));
 
     if (accumulate) {
         vec3 lastColor = texture2D(lastRenderResult, screenIndex / screenGeometry).xyz;

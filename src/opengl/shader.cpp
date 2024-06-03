@@ -29,14 +29,14 @@ void Shader::GetShaderSource(const string &vertexShaderPath, const string &fragm
     // Open Vertex Shader File
     vertexShaderFile.open(vertexShaderPath);
     if (!vertexShaderFile.is_open()) { 
-        cout << "[Error] Shader: Failed to open vertex shader file.\n" << endl; 
+        cout << "[Error] Shader: Failed to open vertex shader file." << endl; 
         exit(-1);
     } 
 
     // Open Fragment Shader File
     fragmentShaderFile.open(fragmentShaderPath);
     if (!fragmentShaderFile.is_open()) { 
-        cout << "[Error] Shader: Failed to open fragment shader file.\n" << endl; 
+        cout << "[Error] Shader: Failed to open fragment shader file." << endl; 
         exit(-1);
     } 
 
@@ -67,7 +67,7 @@ void Shader::CompileShader() {
     if (!success)
     {
         glGetShaderInfoLog(vertexShader, 2048, NULL, infoLog);
-        cout << "[Error] Shader: Vertex shader compile failed.\n" << infoLog << endl;
+        cout << "[Error] Shader: Vertex shader compile failed." << infoLog << endl;
         exit(-1);
     }
 
@@ -79,7 +79,7 @@ void Shader::CompileShader() {
     if (!success)
     {
         glGetShaderInfoLog(fragmentShader, 2048, NULL, infoLog);
-        cout << "[Error] Shader: Fragment shader compile failed.\n" << infoLog << endl;
+        cout << "[Error] Shader: Fragment shader compile failed." << infoLog << endl;
         exit(-1);
     }
 
@@ -91,7 +91,7 @@ void Shader::CompileShader() {
     glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shaderProgramID, 2048, NULL, infoLog);
-        cout << "[Error] Shader: Link failed.\n" << infoLog << endl;
+        cout << "[Error] Shader: Link failed." << infoLog << endl;
         exit(-1);
     }
 
@@ -118,7 +118,7 @@ void Shader::SetUniform(const char *name, int *var, int num) {
         case 2: glUniform2iv(GetUniform(name), 1, var); break;
         case 3: glUniform3iv(GetUniform(name), 1, var); break;
         default:
-            cout << "[Error] Shader: Uniform variable number error.\n" << endl;
+            cout << "[Error] Shader: Uniform variable number error." << endl;
             exit(-1);
     }
 }
@@ -141,7 +141,7 @@ void Shader::SetUniform(const char *name, unsigned int *var, int num) {
         case 2: glUniform2uiv(GetUniform(name), 1, var); break;
         case 3: glUniform3uiv(GetUniform(name), 1, var); break;
         default:
-            cout << "[Error] Shader: Uniform variable number error.\n" << endl;
+            cout << "[Error] Shader: Uniform variable number error." << endl;
             exit(-1);
     }
 }
@@ -164,7 +164,7 @@ void Shader::SetUniform(const char *name, float *var, int num) {
         case 2: glUniform2fv(GetUniform(name), 1, var); break;
         case 3: glUniform3fv(GetUniform(name), 1, var); break;
         default:
-            cout << "[Error] Shader: Uniform variable number error.\n" << endl;
+            cout << "[Error] Shader: Uniform variable number error." << endl;
             exit(-1);
     }
 }
@@ -173,8 +173,8 @@ int Shader::GetUniform(const char *name) {
     glUseProgram(shaderProgramID);
     int uniform = glGetUniformLocation(shaderProgramID, name);
     if (uniform == -1) {
-        cout << "[Error] Shader: Failed to locate uniform variable \""
-             << name << "\".\n" << endl;
+        cout << "[Warning] Shader: Failed to locate uniform variable \""
+             << name << "\"." << endl;
         // exit(-1);
     }
     return uniform;

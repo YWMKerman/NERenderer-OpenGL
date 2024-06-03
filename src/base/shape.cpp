@@ -4,6 +4,8 @@
 
 #include "../math/include/vector3.hpp"
 
+Shape::Shape() {}
+
 ShapeData Shape::GetShapeData() const {
     return shapeData;
 }

@@ -5,10 +5,12 @@
 #include "../../base/include/camera.hpp"
 #include "../../base/include/scene.hpp"
 
+#include <memory>
+
 class Renderer {
     public:
-        Renderer(Scene &scene,
-                 const Camera &camera,
+        Renderer(shared_ptr<Scene> scene,
+                 shared_ptr<Camera> camera,
                  int maxDepth,
                  float russianRoulete,
                  float gamma,
@@ -25,8 +27,8 @@ class Renderer {
         int screenWidth;
         int screenHeight;
 
-        Scene &scene;
-        const Camera &camera;
+        shared_ptr<Scene> scene;
+        shared_ptr<Camera> camera;
 
         int maxDepth;
         float russianRoulete;

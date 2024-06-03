@@ -20,7 +20,7 @@ void FrameBuffer::BindTexture(unsigned int textureID) {
     glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureID, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        cout << "[Error] FrameBuffer: Framebuffer is incomplete.\n" << endl;
+        cout << "[Error] FrameBuffer: Framebuffer is incomplete." << endl;
         exit(-1);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

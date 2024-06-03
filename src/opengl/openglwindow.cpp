@@ -42,7 +42,7 @@ void OpenGLWindow::CreateWindow(int width,
 
     glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
     if (glfwWindow == NULL) {
-        cout << "[Error] OpenGLWindow: Failed to create GLFW window.\n" << endl;
+        cout << "[Error] OpenGLWindow: Failed to create GLFW window." << endl;
         glfwTerminate();
         exit(-1);
     }
@@ -53,7 +53,7 @@ void OpenGLWindow::CreateWindow(int width,
 void OpenGLWindow::LoadOpenGLFunctions() {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        cout << "[Error] OpenGLWindow: Failed to initialize GLAD.\n" << endl;
+        cout << "[Error] OpenGLWindow: Failed to initialize GLAD." << endl;
         glfwTerminate();
         exit(-1);
     }
