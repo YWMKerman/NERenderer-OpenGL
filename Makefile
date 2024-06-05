@@ -6,6 +6,7 @@ CFLAGS = -Wall
 LINK = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl
 SHADER_DIR = src/shader
 BIN_DIR = build
+OUTPUT_DIR = output
 
 all: shader main
 
@@ -24,6 +25,8 @@ main: third-party/glad/src/glad.o \
 	  src/base/object.o \
 	  src/base/scene.o \
 	  \
+	  src/image/image.o \
+	  \
 	  src/opengl/openglwindow.o \
 	  src/opengl/shader.o \
 	  src/opengl/mesh.o \
@@ -38,6 +41,7 @@ main: third-party/glad/src/glad.o \
 	  src/main/main.o
 	@echo Linking Project...
 	@mkdir -p $(BIN_DIR)
+	@mkdir -p $(OUTPUT_DIR)
 	@$(CPP_COMPILER) $(CFLAGS) $(LINK) $^ -o $(BIN_DIR)/$@
 	@echo Successfully built binary $(BIN_DIR)/$@.
 

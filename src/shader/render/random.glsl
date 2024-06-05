@@ -10,7 +10,7 @@ const uint LCG_M = uint(2147483647);
 uint seed;
 
 void RandomInit(vec2 screenIndex) {
-    seed = texture(randomSeed, screenIndex / screenGeometry).x;
+    seed = texture(randomSeed, screenIndex / vec2(screenGeometry)).x;
     seed = (seed + extraSeed) % LCG_M;
 }
 

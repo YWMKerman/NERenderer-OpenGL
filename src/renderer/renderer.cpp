@@ -12,11 +12,14 @@
 #include "../opengl/include/texture1D.hpp"
 #include "../opengl/include/texture2D.hpp"
 
+#include "../image/include/image.hpp"
+
 #include "../../third-party/glad/include/glad/glad.h"
 #include <GLFW/glfw3.h>
 
 #include <memory>
 #include <random>
+#include <string>
 
 #define ArrayLength(_array) ((unsigned int) (sizeof(_array) / sizeof(*_array)))
 
@@ -104,6 +107,8 @@ void Renderer::Render() {
 
     int frameCount = 1;
 
+    Image image(screenWidth, screenHeight, RGBA);
+
     openglwindow.RenderLoop(
         [&, scene = scene, camera = camera] (GLFWwindow *window) {
             // Process Input
@@ -150,7 +155,6 @@ void Renderer::Render() {
             renderShader.SetUniform("frameCount", frameCount);
             renderShader.SetUniform("randomSeed", 2);
             renderShader.SetUniform("extraSeed", engine());
-            renderShader.SetUniform("gamma", gamma);
             renderShader.SetUniform("screenGeometry",
                                     (unsigned int) screenWidth,
                                     (unsigned int) screenHeight);
@@ -179,6 +183,7 @@ void Renderer::Render() {
 
             // Initialize Uniform Variables
             displayShader.SetUniform("lastRenderResult", 0);
+            displayShader.SetUniform("gamma", gamma);
             displayShader.SetUniform("screenGeometry",
                                     (unsigned int) screenWidth,
                                     (unsigned int) screenHeight);
@@ -191,6 +196,9 @@ void Renderer::Render() {
 
             /*** End Display Image ***/
 
+
+            // Read Render Result
+            glReadPixels(0, 0, screenWidth, screenHeight, GL_RGBA, GL_UNSIGNED_BYTE, image.GetArray());
 
             // Increase Frame Count
             frameCount++;

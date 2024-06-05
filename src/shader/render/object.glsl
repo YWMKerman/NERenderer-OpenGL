@@ -14,11 +14,11 @@ Object ObjectInit(ObjectPtr objPtr) {
     vec4 materialData[2];
     float index = float(objPtr.index);
 
-    shapeData[0] = texture1D(objectList, (index + 0 + 0.5f) / packNum);
-    shapeData[1] = texture1D(objectList, (index + 1 + 0.5f) / packNum);
-    shapeData[2] = texture1D(objectList, (index + 2 + 0.5f) / packNum);
-    materialData[0] = texture1D(objectList, (index + 3 + 0.5f) / packNum);
-    materialData[1] = texture1D(objectList, (index + 4 + 0.5f) / packNum);
+    shapeData[0] = texture1D(objectList, (float(index) + 0.0f + 0.5f) / float(packNum));
+    shapeData[1] = texture1D(objectList, (float(index) + 1.0f + 0.5f) / float(packNum));
+    shapeData[2] = texture1D(objectList, (float(index) + 2.0f + 0.5f) / float(packNum));
+    materialData[0] = texture1D(objectList, (float(index) + 3.0f + 0.5f) / float(packNum));
+    materialData[1] = texture1D(objectList, (float(index) + 4.0f + 0.5f) / float(packNum));
 
     Shape shape;
     shape.type = shapeData[0].x;

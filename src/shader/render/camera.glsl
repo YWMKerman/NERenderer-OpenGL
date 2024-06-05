@@ -22,7 +22,7 @@ struct Camera {
 uniform Camera camera;
 
 Ray CameraGetSampleRay(vec2 screenIndex) {
-    vec2 sampleOffset = (screenIndex + 0.5 * vec2(Random11(),Random11())) / screenGeometry;
+    vec2 sampleOffset = (screenIndex + 0.5 * vec2(Random11(),Random11())) / vec2(screenGeometry);
     vec3 samplePoint =  camera.screenLowerLeftCorner
                         + camera.right * sampleOffset.x * camera.screenPlaneWidth
                         + camera.up    * sampleOffset.y * camera.screenPlaneHeight;

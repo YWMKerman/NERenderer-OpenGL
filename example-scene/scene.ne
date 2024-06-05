@@ -94,7 +94,7 @@ SceneBegin
         MaterialBegin
             type Lambertian
             kd [1,1,1]
-            glowSpectrum [5,5,5]
+            glowSpectrum [1,1,1]
         MaterialEnd
     ObjectEnd
 SceneEnd

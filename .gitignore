@@ -1,3 +1,4 @@
 **/*.o
 build
+output
 src/shader/render.glsl
